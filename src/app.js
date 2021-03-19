@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Counter from "./counter";
+import Carousel from "./carousel";
+
 import { AppContainer } from "react-hot-loader";
 
 function render(Component) {
@@ -12,11 +13,11 @@ function render(Component) {
     );
 }
 
-render(Counter);
+render(Carousel);
 
 if (module.hot) {
-    module.hot.accept("./counter.js", () => {
-        const NewCounter = require("./counter.js").default;
-        render(NewCounter);
+    module.hot.accept("./carousel.js", () => {
+        const NewCarousel = require("./carousel.js").default;
+        render(NewCarousel);
     });
 }
