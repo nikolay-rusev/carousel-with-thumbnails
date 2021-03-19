@@ -1,14 +1,39 @@
 import React from "react";
+import { animals, starWars, uniqueNamesGenerator } from "unique-names-generator";
 
 export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             slideCount: 12,
-            selectionId: 0
+            selectionId: 0,
+            autoPlay: true,
+            autoPlayInterval: 3000
         };
 
         this.changeSelection = this.changeSelection.bind(this);
+        this.autoPlay = this.autoPlay.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.state.autoPlay) {
+            this.interval = setInterval(this.autoPlay, this.state.autoPlayInterval);
+        }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    autoPlay() {
+        let currentId = this.state.selectionId;
+        let newId = currentId + 1;
+        if (newId >= this.state.slideCount) {
+            newId = 0;
+        }
+        this.setState({
+            selectionId: newId
+        });
     }
 
     changeSelection(event) {
@@ -19,11 +44,16 @@ export default class extends React.Component {
     }
 
     textGenerator() {
-        return "Lorem ipsum dolor sit amet consectetur adipisicing elit.";
+        let randomAnimalName = uniqueNamesGenerator({
+            dictionaries: [animals]
+        });
+        return randomAnimalName + ": Lorem ipsum dolor sit amet consectetur adipisicing elit.";
     }
 
     takenByGenerator() {
-        return "Photo: Tim Marshall";
+        return uniqueNamesGenerator({
+            dictionaries: [starWars]
+        });
     }
 
     imageUrlGenerator(index, thumbnail) {
