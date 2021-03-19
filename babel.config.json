@@ -1,0 +1,20 @@
+{
+    "ignore": ["//core-js/"],
+    "sourceType": "unambiguous",
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "modules": false,
+                "useBuiltIns": "usage",
+                "corejs": "^3.7.0",
+                "targets": {
+                    "browsers": ["last 2 versions"]
+                },
+                "debug": true
+            }
+        ],
+        "@babel/preset-react"
+    ],
+    "plugins": ["@babel/transform-runtime", "react-hot-loader/babel"]
+}
