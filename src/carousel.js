@@ -4,7 +4,7 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            slideCount: 6,
+            slideCount: 12,
             selectionId: 0
         };
 
@@ -28,18 +28,18 @@ export default class extends React.Component {
 
     imageUrlGenerator(index, thumbnail) {
         if (thumbnail) {
-            return `https://picsum.photos/id/1${index}${index}/150/150`;
+            return `https://picsum.photos/id/1${index}/150/150`;
         }
-        return `https://picsum.photos/id/1${index}${index}/800/450`;
+        return `https://picsum.photos/id/1${index}/800/450`;
     }
 
     renderInputs() {
         let elements = [];
         let input;
         for (let i = 0; i < this.state.slideCount; i++) {
-            input = <input type="radio" name="slides" id={i} />;
+            input = <input type="radio" name="slides" id={i} key={i} />;
             if (this.state.selectionId === i)
-                input = <input type="radio" name="slides" checked="checked" id={i} />;
+                input = <input type="radio" name="slides" defaultChecked={true} id={i} key={i} />;
             elements.push(input);
         }
         return elements;
@@ -54,7 +54,7 @@ export default class extends React.Component {
             }
             let src = this.imageUrlGenerator(i);
             let listItem = (
-                <li className="carousel__slide" style={style}>
+                <li className="carousel__slide" style={style} key={i}>
                     <figure>
                         <div>
                             <img src={src} alt="" />
@@ -79,8 +79,9 @@ export default class extends React.Component {
             if (this.state.selectionId === i) {
                 style.boxShadow = "0px 0px 0px 5px rgba(0,0,255,0.5)";
             }
+            style.maxWidth = `calc((100% / ${this.state.slideCount}) - 20px)`;
             let listItem = (
-                <li style={style}>
+                <li style={style} key={i}>
                     <label htmlFor={i} onClick={this.changeSelection}>
                         <img src={src} alt="" />
                     </label>
