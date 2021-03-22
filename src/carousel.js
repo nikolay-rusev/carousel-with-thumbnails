@@ -7,6 +7,7 @@ export default class extends React.Component {
         this.state = {
             showArrows: false,
             slideCount: 12,
+            oldSelectionId: 0,
             selectionId: 0,
             autoPlay: false,
             autoPlayInterval: 3000
@@ -35,33 +36,40 @@ export default class extends React.Component {
             newId = 0;
         }
         this.setState({
+            oldSelectionId: currentId,
             selectionId: newId
         });
     }
 
     increment() {
-        let newId = this.state.selectionId + 1;
+        let currentId = this.state.selectionId;
+        let newId = currentId + 1;
         if (newId >= this.state.slideCount) {
             newId = this.state.slideCount - 1;
         }
         this.setState({
+            oldSelectionId: currentId,
             selectionId: newId
         });
     }
 
     decrement() {
-        let newId = this.state.selectionId - 1;
+        let currentId = this.state.selectionId;
+        let newId = currentId - 1;
         if (newId < 0) {
             newId = 0;
         }
         this.setState({
+            oldSelectionId: currentId,
             selectionId: newId
         });
     }
 
     changeSelection(event) {
+        let currentId = this.state.selectionId;
         let newId = parseInt(event.currentTarget.htmlFor);
         this.setState({
+            oldSelectionId: currentId,
             selectionId: newId
         });
     }
@@ -101,11 +109,26 @@ export default class extends React.Component {
         return elements;
     }
 
+    computeStyle() {
+        let oldId = this.state.oldSelectionId;
+        let currentId = this.state.selectionId;
+        let difference = Math.abs(currentId - oldId);
+        let base = 0.5;
+        let time = difference * base;
+        if (time > 2.5) {
+            time = 2.5;
+        }
+        return {
+            marginLeft: "-" + currentId * 100 + "%",
+            transition: `${time}s ease-in-out`
+        };
+    }
+
     renderSlides() {
         let elements = [];
         for (let i = 0; i < this.state.slideCount; i++) {
             let src = this.imageUrlGenerator(i);
-            let style = i === 0 ? { marginLeft: "-" + this.state.selectionId * 100 + "%" } : {};
+            let style = i === 0 ? this.computeStyle() : {};
             let listItem = (
                 <li className="carousel__slide" key={i} style={style}>
                     <figure>
@@ -119,6 +142,7 @@ export default class extends React.Component {
                     </figure>
                 </li>
             );
+
             elements.push(listItem);
         }
 
