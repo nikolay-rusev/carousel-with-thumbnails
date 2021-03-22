@@ -90,9 +90,12 @@ export default class extends React.Component {
         let elements = [];
         let input;
         for (let i = 0; i < this.state.slideCount; i++) {
-            input = <input type="radio" name="slides" id={i} key={i} />;
-            if (this.state.selectionId === i)
-                input = <input type="radio" name="slides" defaultChecked={true} id={i} key={i} />;
+            input =
+                this.state.selectionId === i ? (
+                    <input type="radio" name="slides" defaultChecked={true} id={i} key={i} />
+                ) : (
+                    <input type="radio" name="slides" id={i} key={i} />
+                );
             elements.push(input);
         }
         return elements;
