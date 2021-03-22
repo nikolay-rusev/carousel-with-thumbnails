@@ -5,13 +5,16 @@ export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            showArrows: false,
             slideCount: 12,
             selectionId: 0,
-            autoPlay: true,
+            autoPlay: false,
             autoPlayInterval: 3000
         };
 
         this.changeSelection = this.changeSelection.bind(this);
+        this.increment = this.increment.bind(this);
+        this.decrement = this.decrement.bind(this);
         this.autoPlay = this.autoPlay.bind(this);
     }
 
@@ -29,6 +32,26 @@ export default class extends React.Component {
         let currentId = this.state.selectionId;
         let newId = currentId + 1;
         if (newId >= this.state.slideCount) {
+            newId = 0;
+        }
+        this.setState({
+            selectionId: newId
+        });
+    }
+
+    increment() {
+        let newId = this.state.selectionId + 1;
+        if (newId >= this.state.slideCount) {
+            newId = this.state.slideCount - 1;
+        }
+        this.setState({
+            selectionId: newId
+        });
+    }
+
+    decrement() {
+        let newId = this.state.selectionId - 1;
+        if (newId < 0) {
             newId = 0;
         }
         this.setState({
@@ -78,13 +101,10 @@ export default class extends React.Component {
     renderSlides() {
         let elements = [];
         for (let i = 0; i < this.state.slideCount; i++) {
-            let style = {};
-            if (i === 0) {
-                style.marginLeft = "-" + this.state.selectionId * 100 + "%";
-            }
             let src = this.imageUrlGenerator(i);
+            let style = i === 0 ? { marginLeft: "-" + this.state.selectionId * 100 + "%" } : {};
             let listItem = (
-                <li className="carousel__slide" style={style} key={i}>
+                <li className="carousel__slide" key={i} style={style}>
                     <figure>
                         <div>
                             <img src={src} alt="" />
@@ -98,6 +118,7 @@ export default class extends React.Component {
             );
             elements.push(listItem);
         }
+
         return <ul className="carousel__slides">{elements}</ul>;
     }
 
@@ -122,10 +143,25 @@ export default class extends React.Component {
         return <ul className="carousel__thumbnails">{elements}</ul>;
     }
 
+    renderArrows() {
+        let leftArrow = (
+            <a href="#" onClick={this.decrement}>
+                left
+            </a>
+        );
+        let rightArrow = (
+            <a href="#" onClick={this.increment}>
+                right
+            </a>
+        );
+        return { leftArrow, rightArrow };
+    }
+
     render() {
         let inputs = this.renderInputs();
         let slides = this.renderSlides();
         let thumbnails = this.renderThumbnails();
+        // let { leftArrow, rightArrow } = this.renderArrows();
         return (
             <section>
                 <div className="container">
